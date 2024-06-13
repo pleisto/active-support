@@ -1,8 +1,12 @@
 {
   "name": "@pleisto/active-support",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A TypeScript utility library designed to optimize for programmer happiness.",
   "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pleisto/active-support.git"

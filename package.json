@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/active-support",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A TypeScript utility library designed to optimize for programmer happiness.",
   "license": "Apache-2.0",
   "files": [
@@ -17,11 +17,6 @@
   "module": "commonjs",
   "main": "./dist/index.ts",
   "types": "./dist/index.ts",
-  "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    }
-  },
   "volta": {
     "node": "20.14.0"
   },

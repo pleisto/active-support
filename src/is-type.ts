@@ -1,13 +1,14 @@
-import { isArray, isEmpty, isFunction } from 'radash'
-import isPlainObject from 'lodash/isPlainObject'
-import isDate from 'lodash/isDate'
 import isBoolean from 'lodash/isBoolean'
+import isDate from 'lodash/isDate'
+import isNaN from 'lodash/isNaN'
 import isNull from 'lodash/isNull'
 import isObject from 'lodash/isObject'
-import isNaN from 'lodash/isNaN'
+import isPlainObject from 'lodash/isPlainObject'
 import isRegExp from 'lodash/isRegExp'
-export { isSymbol, isFloat, isInt } from 'radash'
-export { isObject, isRegExp, isNaN, isDate, isBoolean, isNull, isArray, isEmpty, isFunction, isPlainObject }
+import { isArray, isEmpty, isFunction } from 'radash'
+
+export { isFloat, isInt, isSymbol } from 'radash'
+export { isArray, isBoolean, isDate, isEmpty, isFunction, isNaN, isNull, isObject, isPlainObject, isRegExp }
 
 /**
  * Checks if a given value is a string.
@@ -42,7 +43,7 @@ export function isNullOrUndefined(value: unknown): value is null | undefined {
  * Checks if a given value is a uuid.
  * @param value
  */
-export const isUUID = <U>(value: string | U): value is string => {
+export const isUUID = <U>(value: U | string): value is string => {
   return isString(value) && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
 }
 
@@ -57,7 +58,7 @@ export const isNonEmptyArray = <T, U>(value: T[] | U): value is [T, ...T[]] =>
  * Checks if a given value is a non empty string.
  * @param value
  */
-export const isNonEmptyString = <U>(value: string | U): value is string => isString(value) && value.length > 0
+export const isNonEmptyString = <U>(value: U | string): value is string => isString(value) && value.length > 0
 
 /**
  * Checks if a given value is a empty like Ruby on Rails.
@@ -87,7 +88,8 @@ export const isUrl = (value: string, schema?: string): boolean => {
  * @param value
  * @returns true if the value is a email, false otherwise.
  */
-export const isEmail = (value: string): boolean => /^[\w-\\.]+@([\w-]+\.)+[\w-]{1,}$/.test(value)
+// eslint-disable-next-line regexp/strict
+export const isEmail = (value: string): boolean => /^[\w-\\.]+@(?:[\w-]+\.)+[\w-]+$/.test(value)
 
 /**
  * Checks if a given value is a file

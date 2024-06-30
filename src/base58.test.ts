@@ -1,4 +1,5 @@
-import { describe, test, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
 import { base58Decode, base58Encode } from './base58'
 
 const testSetString = [
@@ -10,12 +11,12 @@ const testSetString = [
 ]
 
 describe('base58', () => {
-  test('should encode', () => {
+  it('should encode', () => {
     for (const [input, output] of testSetString) {
       expect(base58Encode(input!)).toBe(output)
     }
   })
-  test('should decode', () => {
+  it('should decode', () => {
     const enc = new TextEncoder()
     for (const [input, output] of testSetString) {
       expect(base58Decode(output as string)).toStrictEqual(typeof input === 'string' ? enc.encode(input) : input)

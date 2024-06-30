@@ -1,8 +1,9 @@
-import { expect, test, describe } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
 import { pluralize, singularize } from './index'
 
 describe('.pluralize', () => {
-  test('should return the plural form of a word', () => {
+  it('should return the plural form of a word', () => {
     expect(pluralize('word')).toEqual('words')
     expect(pluralize('datum')).toEqual('data')
     expect(pluralize('water')).toEqual('water')
@@ -10,7 +11,7 @@ describe('.pluralize', () => {
   })
 })
 describe('.singularize', () => {
-  test('should return the singular form of a word', () => {
+  it('should return the singular form of a word', () => {
     expect(singularize('words')).toEqual('word')
     expect(singularize('quizzes')).toEqual('quiz')
     expect(singularize('news')).toEqual('news')

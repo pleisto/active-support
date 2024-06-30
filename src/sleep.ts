@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/prefer-promise-reject-errors */
-import { type Integer, type Positive } from './ts-types'
+ 
+import type { Integer, Positive } from './ts-types'
 
 export const AbortException = 'Aborted'
 /**
@@ -9,20 +9,20 @@ export const AbortException = 'Aborted'
  */
 export const sleep = <T extends number>(
   milliseconds: Positive<Integer<T>>
-): { promise: Promise<void>; cancel: () => void } => {
+): { cancel: () => void; promise: Promise<void> } => {
   let timeout: ReturnType<typeof setTimeout>
   const controller = new AbortController()
   return {
+    cancel: () => {
+      clearTimeout(timeout)
+      controller.abort()
+    },
     promise: new Promise((resolve, reject) => {
       controller.signal.addEventListener('abort', () => {
         reject(AbortException)
       })
       timeout = setTimeout(resolve, milliseconds)
-    }),
-    cancel: () => {
-      clearTimeout(timeout)
-      controller.abort()
-    }
+    })
   }
 }
 
@@ -38,12 +38,17 @@ export const sleepWithIntervals = <T extends number>(
   ms: Positive<Integer<T>>,
   interval?: Positive<Integer<T>>,
   callback?: () => void
-): { promise: Promise<void>; cancel: () => void } => {
+): { cancel: () => void; promise: Promise<void> } => {
   let timeout: ReturnType<typeof setTimeout>
   let timer: ReturnType<typeof setInterval>
   const controller = new AbortController()
 
   return {
+    cancel: () => {
+      clearTimeout(timeout)
+      if (timer) clearInterval(timer)
+      controller.abort()
+    },
     promise: new Promise((resolve, reject) => {
       controller.signal.addEventListener('abort', () => {
         reject(AbortException)
@@ -58,11 +63,6 @@ export const sleepWithIntervals = <T extends number>(
         resolve()
         if (timer) clearInterval(timer)
       }, ms)
-    }),
-    cancel: () => {
-      clearTimeout(timeout)
-      if (timer) clearInterval(timer)
-      controller.abort()
-    }
+    })
   }
 }

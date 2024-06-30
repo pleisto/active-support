@@ -1,8 +1,9 @@
-import { expect, test, describe } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
 import { prependUrlScheme } from './prepend-url-scheme'
 
 describe('prependUrlScheme', () => {
-  test('keeps it as custom protocol correctly', () => {
+  it('keeps it as custom protocol correctly', () => {
     const link1 = 'some-custom-protocol://send/abc@example.org'
     expect(prependUrlScheme(link1)).toEqual(link1)
 
@@ -10,7 +11,7 @@ describe('prependUrlScheme', () => {
     expect(prependUrlScheme(link2)).toEqual(link2)
   })
 
-  test('prepends http correctly', () => {
+  it('prepends http correctly', () => {
     const httpUrl = 'http://mashpod.cloud'
     const httpsUrl = 'https://mashpod.cloud'
 
@@ -21,7 +22,7 @@ describe('prependUrlScheme', () => {
     expect(prependUrlScheme('//mashpod.cloud')).toEqual('//mashpod.cloud')
   })
 
-  test('prepends mail correctly', () => {
+  it('prepends mail correctly', () => {
     const mailUrl = 'mailto:people@mashpod.cloud'
 
     expect(prependUrlScheme('people@mashpod.cloud')).toEqual(mailUrl)

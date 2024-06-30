@@ -1,25 +1,26 @@
-import { expect, test, describe, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
+  cloneDeep,
   compact,
+  debounce,
+  deepMerge,
   drop,
   dropRight,
+  flattenObject,
   initial,
-  uniq,
   reject,
-  cloneDeep,
-  deepMerge,
-  debounce,
-  flattenObject
+  uniq
 } from './lodash-modern'
 
 describe('.compact', () => {
-  test('should work', () => {
-    expect(compact([0, undefined, 1, false, NaN, 2, '', 3, null])).toEqual([1, 2, 3])
+  it('should work', () => {
+    expect(compact([0, undefined, 1, false, Number.NaN, 2, '', 3, null])).toEqual([1, 2, 3])
   })
 })
 
 describe('.drop', () => {
-  test('should work', () => {
+  it('should work', () => {
     const testArr = [1, 2, 3]
     expect(drop(testArr)).toEqual([2, 3])
     expect(drop(testArr, 2)).toEqual([3])
@@ -29,7 +30,7 @@ describe('.drop', () => {
 })
 
 describe('.dropRight', () => {
-  test('should work', () => {
+  it('should work', () => {
     const testArr = [1, 2, 3]
     expect(dropRight(testArr)).toEqual([1, 2])
     expect(dropRight(testArr, 2)).toEqual([1])
@@ -39,33 +40,33 @@ describe('.dropRight', () => {
 })
 
 describe('.initial', () => {
-  test('should work', () => {
+  it('should work', () => {
     expect(initial([1, 2, 3])).toEqual([1, 2])
     expect(initial([3])).toEqual([])
   })
 })
 
 describe('.uniq', () => {
-  test('should work', () => {
+  it('should work', () => {
     expect(uniq([1, 2, 1])).toEqual([1, 2])
   })
 })
 
 describe('.reject', () => {
-  test('should work', () => {
+  it('should work', () => {
     expect(reject([1, 2, 3], n => n === 2)).toEqual([1, 3])
   })
 })
 
 describe('.cloneDeep', () => {
-  test('should work', () => {
+  it('should work', () => {
     const obj = [{ a: 1 }, { b: 2 }]
     expect(cloneDeep(obj)[0] === obj[0]).toBeFalsy()
   })
 })
 
 describe('.deepMerge', () => {
-  test('can handle falsey', () => {
+  it('can handle falsey', () => {
     expect(
       deepMerge<{ a: string; b: string | undefined }>(
         {},
@@ -82,17 +83,17 @@ describe('.deepMerge', () => {
     })
   })
 
-  test('can handle null values', () => {
+  it('can handle null values', () => {
     expect(deepMerge({}, { a: null })).toEqual({
       a: null
     })
   })
 
-  test('can handle array values', () => {
+  it('can handle array values', () => {
     expect(deepMerge({}, { a: [1, 2] })).toEqual({ a: [1, 2] })
   })
 
-  test('can handle deep cycles', () => {
+  it('can handle deep cycles', () => {
     const obj: { foo: { bar: { baz: Record<string, unknown> | undefined } } } = {
       foo: {
         bar: {
@@ -121,7 +122,7 @@ describe('.debounce', () => {
     // restoring date after each test run
     vi.useRealTimers()
   })
-  test('debounced function runs after the wait time is up', async () => {
+  it('debounced function runs after the wait time is up', async () => {
     const mock = vi.fn()
     const debounced = debounce(mock, 10)
 
@@ -136,7 +137,7 @@ describe('.debounce', () => {
 })
 
 describe('.flattenObject', () => {
-  test('should work', () => {
+  it('should work', () => {
     expect(flattenObject({ a: { b: 1, c: undefined, d: { '1': { '-bal': 'hello' } } } })).toEqual({
       'a.b': 1,
       'a.c': undefined,

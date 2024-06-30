@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+ 
 /**
  * Forked from third-party library.
  * @see https://github.com/denoland/deno_std/blob/627844f47fffd4319186df46beff6f38588887ff/encoding/base58.ts
@@ -89,7 +89,7 @@ const base58alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwx
  */
 export function base58Encode(data: ArrayBuffer | string): string {
   const uint8tData =
-    // eslint-disable-next-line no-nested-ternary
+     
     typeof data === 'string' ? new TextEncoder().encode(data) : data instanceof Uint8Array ? data : new Uint8Array(data)
 
   let length = 0

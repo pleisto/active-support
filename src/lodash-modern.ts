@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/no-restricted-imports */
-
 import isPlainObject from 'lodash/isPlainObject'
-import sortBy from 'lodash/sortBy'
-import uniqBy from 'lodash/uniqBy'
 import omitBy from 'lodash/omitBy'
 import pickBy from 'lodash/pickBy'
-import toString from 'lodash/toString'
+import sortBy from 'lodash/sortBy'
 import toNumber from 'lodash/toNumber'
+import toString from 'lodash/toString'
+import uniqBy from 'lodash/uniqBy'
 
+export { default as equal } from 'fast-deep-equal/es6/react'
+export { omitBy, pickBy, sortBy, toNumber, toString, uniqBy }
+export { default as memoize } from 'moize'
 /**
  * NOTICE: All methods not exported from `lodash` are deprecated.
  * you can replace with ES6
@@ -17,41 +18,38 @@ import toNumber from 'lodash/toNumber'
  * @see https://radash-docs.vercel.app/docs/getting-started
  */
 export {
+  camel as camelCase,
+  capitalize,
+  chain,
   cluster as chunk,
+  compose,
   counting,
+  dash as kebabCase,
+  diff,
+  draw as sample,
   first,
-  last,
   fork as partition,
+  get,
   group,
   intersects,
+  invert,
+  last,
+  listify,
+  mapEntries,
+  mapKeys,
+  mapValues,
   max,
   min,
-  sum,
-  select,
-  diff,
-  chain,
-  compose,
   partial,
   partob,
-  throttle,
-  mapEntries,
-  mapValues,
-  mapKeys,
-  dash as kebabCase,
   pick,
-  zip,
-  get,
-  listify,
-  invert,
+  select,
   series,
-  camel as camelCase,
   snake as snakeCase,
-  draw as sample,
-  capitalize
+  sum,
+  throttle,
+  zip
 } from 'radash'
-export { sortBy, uniqBy, omitBy, pickBy, toNumber, toString }
-export { default as memoize } from 'moize'
-export { default as equal } from 'fast-deep-equal/es6/react'
 
 /**
  * ES Version of `lodash.compact`
@@ -119,7 +117,7 @@ export const cloneDeep = (value: any): any | never => {
   const typeofValue = typeof value
   // primatives are copied by value.
   if (
-    ['string', 'number', 'boolean', 'string', 'bigint', 'symbol', 'null', 'undefined', 'function'].includes(typeofValue)
+    ['bigint', 'boolean', 'function', 'null', 'number', 'string', 'string', 'symbol', 'undefined'].includes(typeofValue)
   ) {
     return value
   }
@@ -145,8 +143,7 @@ export const cloneDeep = (value: any): any | never => {
  * @author Microsoft Corporation
  * @license MIT
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
-const _merge = <T extends Object>(target: T, source: T, circularReferences: any[] = []): T => {
+const _merge = <T extends object>(target: T, source: T, circularReferences: any[] = []): T => {
   circularReferences.push(source)
 
   for (const name in source) {
@@ -176,8 +173,7 @@ const _merge = <T extends Object>(target: T, source: T, circularReferences: any[
  * together in the order provided. If an object creates a circular reference, it will assign the
  * original reference.
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function deepMerge<T = {}>(target: Partial<T>, ...args: Array<Partial<T> | null | undefined | false>): T {
+export function deepMerge<T = object>(target: Partial<T>, ...args: Array<Partial<T> | false | null | undefined>): T {
   for (const arg of args) {
     _merge(target || {}, arg as Partial<T>)
   }
@@ -230,7 +226,7 @@ export function debounce<T extends any[]>(
   fn: (this: DebouncedFunction<T>, ...args: T) => void,
   wait: number
 ): DebouncedFunction<T> {
-  let timeout: number | NodeJS.Timeout | null = null
+  let timeout: NodeJS.Timeout | null | number = null
   let flush: (() => void) | null = null
 
   const debounced: DebouncedFunction<T> = ((...args: T) => {
@@ -269,10 +265,10 @@ export function debounce<T extends any[]>(
  */
 export function escape(str: string): string {
   const escapeChar: Record<string, string> = {
-    '<': '&lt;',
-    '>': '&gt;',
     '"': '&quot;',
-    '&': '&amp;'
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;'
   }
   return str.replace(/[<>"&]/g, a => escapeChar[a] ?? a)
 }
@@ -348,8 +344,7 @@ export function range(start: number, end?: number): number[] {
  * @returns a flattened object
  * @private
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function flattenObject<T extends {}>(value: T): T extends object ? Flatten<T> : T {
+export function flattenObject<T extends object>(value: T): T extends object ? Flatten<T> : T {
   if (!isPlainObject(value)) {
     // TypeScript doesn't know T is an object due to isPlainObject's typings. Cast to any.
     return value as any
@@ -386,7 +381,7 @@ type Flatten<T extends object> = object extends T
                 ? Pick<T, K>
                 : Flatten<V> extends infer FV
                   ? {
-                      [P in keyof FV as `${Extract<K, string | number>}.${Extract<P, string | number>}`]: FV[P]
+                      [P in keyof FV as `${Extract<K, number | string>}.${Extract<P, number | string>}`]: FV[P]
                     }
                   : never
               : Pick<T, K>

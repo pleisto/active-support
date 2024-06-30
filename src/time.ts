@@ -24,7 +24,7 @@ export function seconds(value: StringValue | number, options?: Options): number 
   } else if (typeof value === 'number') {
     return ms(value * 1000, options)
   } else {
-    throw new Error('value must be a non-empty string or a number')
+    throw new TypeError('value must be a non-empty string or a number')
   }
 }
 

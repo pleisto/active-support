@@ -18,6 +18,37 @@ export class Vocabulary {
   /// <param name="singular">The singular form of the irregular word, e.g. "person".</param>
   /// <param name="plural">The plural form of the irregular word, e.g. "people".</param>
   /// <param name="matchEnding">True to match these words on their own as well
+  private applyRules(rules: Rule[], word: string, skipFirstRule: boolean): string {
+    if (word == null) {
+      return ''
+    }
+
+    if (this.isUncountable(word)) {
+      return word
+    }
+
+    let result = word
+    const end = skipFirstRule ? 1 : 0
+    for (let i = rules.length - 1; i >= end; i--) {
+      // eslint-disable-next-line no-cond-assign
+      if ((result = rules[i]!.apply(word)) !== '') {
+        break
+      }
+    }
+    return result
+  }
+
+  /// <summary>
+  /// Adds an uncountable word to the vocabulary, e.g. "fish".  Will be ignored when plurality is changed.
+  /// </summary>
+  private isUncountable(word: string): boolean {
+    return this._uncountables.includes(word.toLowerCase())
+  }
+
+  /// <summary>
+  /// Adds a rule to the vocabulary that does not follow trivial rules for pluralization, e.g. "bus" -> "buses"
+  /// </summary>
+  /// <param name="rule">RegEx to be matched, case insensitive, e.g. "(bus)es$"</param>
   /// as at the end of longer words. False, otherwise.</param>
   public addIrregular(singular: string, plural: string, matchEnding: boolean = true): void {
     if (matchEnding) {
@@ -30,30 +61,13 @@ export class Vocabulary {
   }
 
   /// <summary>
-  /// Adds an uncountable word to the vocabulary, e.g. "fish".  Will be ignored when plurality is changed.
-  /// </summary>
-  /// <param name="word">Word to be added to the list of uncountables.</param>
-  public addUncountable(word: string): void {
-    this._uncountables.push(word.toLowerCase())
-  }
-
-  /// <summary>
-  /// Adds a rule to the vocabulary that does not follow trivial rules for pluralization, e.g. "bus" -> "buses"
-  /// </summary>
-  /// <param name="rule">RegEx to be matched, case insensitive, e.g. "(bus)es$"</param>
-  /// <param name="replacement">RegEx replacement  e.g. "$1"</param>
-  public addPlural(rule: string, replacement: string): void {
-    this._plurals.push(new Rule(rule, replacement))
-  }
-
-  /// <summary>
   /// Adds a rule to the vocabulary that does not follow trivial rules for singularization,
   /// e.g."vertices/indices -> "vertex/index"
   /// </summary>
   /// <param name="rule">RegEx to be matched, case insensitive, e.g. ""(vert|ind)ices$""</param>
-  /// <param name="replacement">RegEx replacement  e.g. "$1ex"</param>
-  public addSingular(rule: string, replacement: string): void {
-    this._singulars.push(new Rule(rule, replacement))
+  /// <param name="replacement">RegEx replacement  e.g. "$1"</param>
+  public addPlural(rule: string, replacement: string): void {
+    this._plurals.push(new Rule(rule, replacement))
   }
 
   /// <summary>
@@ -62,6 +76,23 @@ export class Vocabulary {
   /// <param name="word">Word to be pluralized</param>
   /// <param name="inputIsKnownToBeSingular">Normally you call Pluralize on singular words;
   /// but if you're unsure call it with false</param>
+  /// <param name="replacement">RegEx replacement  e.g. "$1ex"</param>
+  public addSingular(rule: string, replacement: string): void {
+    this._singulars.push(new Rule(rule, replacement))
+  }
+
+  /// <summary>
+  /// Singularizes the provided input considering irregular words
+  /// </summary>
+  /// <param name="word">Word to be singularized</param>
+  /// <param name="inputIsKnownToBePlural">Normally you call Singularize on plural words; but if you're unsure
+  /// call it with false</param>
+  /// <param name="skipSimpleWords">Skip singularizing single words that have an 's' on the end</param>
+  /// <param name="word">Word to be added to the list of uncountables.</param>
+  public addUncountable(word: string): void {
+    this._uncountables.push(word.toLowerCase())
+  }
+
   /// <returns></returns>
   public pluralize(word: string, inputIsKnownToBeSingular: boolean = true): string {
     const result = this.applyRules(this._plurals, word, false)
@@ -85,13 +116,6 @@ export class Vocabulary {
     return result
   }
 
-  /// <summary>
-  /// Singularizes the provided input considering irregular words
-  /// </summary>
-  /// <param name="word">Word to be singularized</param>
-  /// <param name="inputIsKnownToBePlural">Normally you call Singularize on plural words; but if you're unsure
-  /// call it with false</param>
-  /// <param name="skipSimpleWords">Skip singularizing single words that have an 's' on the end</param>
   /// <returns></returns>
   public singularize(word: string, inputIsKnownToBePlural: boolean = true, skipSimpleWords: boolean = false): string {
     const result = this.applyRules(this._singulars, word, skipSimpleWords)
@@ -108,28 +132,5 @@ export class Vocabulary {
     }
 
     return result === '' ? word : result
-  }
-
-  private applyRules(rules: Rule[], word: string, skipFirstRule: boolean): string {
-    if (word == null) {
-      return ''
-    }
-
-    if (this.isUncountable(word)) {
-      return word
-    }
-
-    let result = word
-    const end = skipFirstRule ? 1 : 0
-    for (let i = rules.length - 1; i >= end; i--) {
-      if ((result = rules[i]!.apply(word)) !== '') {
-        break
-      }
-    }
-    return result
-  }
-
-  private isUncountable(word: string): boolean {
-    return this._uncountables.includes(word.toLowerCase())
   }
 }

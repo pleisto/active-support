@@ -5,7 +5,7 @@ import { Vocabulary } from './vocabulary'
  *
  * Container for registered Vocabularies.  At present, only a single vocabulary is supported: Default
  */
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+ 
 export abstract class Vocabularies {
   private static Instance: Vocabulary
 

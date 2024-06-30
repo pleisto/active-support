@@ -1,5 +1,6 @@
 // Inspired by https://github.com/vercel/ms/
 import { isNumber, isString } from './is-type'
+
 const k = 1000
 const bit = 1
 const b = bit * 8 // bytes
@@ -11,33 +12,33 @@ const pb = tb * k
 const eb = pb * k
 
 type Unit =
-  | 'EB'
-  | 'Exabytes'
-  | 'Exabyte'
-  | 'PB'
-  | 'Petabytes'
-  | 'Petabyte'
-  | 'TB'
-  | 'Terabytes'
-  | 'Terabyte'
-  | 'GB'
-  | 'Gigabytes'
-  | 'Gigabyte'
-  | 'MB'
-  | 'Megabytes'
-  | 'Megabyte'
-  | 'KB'
-  | 'Kilobytes'
-  | 'Kilobyte'
   | 'B'
-  | 'Bytes'
-  | 'Byte'
-  | 'Bits'
   | 'Bit'
+  | 'Bits'
+  | 'Byte'
+  | 'Bytes'
+  | 'EB'
+  | 'Exabyte'
+  | 'Exabytes'
+  | 'GB'
+  | 'Gigabyte'
+  | 'Gigabytes'
+  | 'KB'
+  | 'Kilobyte'
+  | 'Kilobytes'
+  | 'MB'
+  | 'Megabyte'
+  | 'Megabytes'
+  | 'PB'
+  | 'Petabyte'
+  | 'Petabytes'
+  | 'TB'
+  | 'Terabyte'
+  | 'Terabytes'
 
-type UnitAnyCase = Unit | Uppercase<Unit> | Lowercase<Unit>
+type UnitAnyCase = Lowercase<Unit> | Unit | Uppercase<Unit>
 
-export type StringValue = `${number}` | `${number}${UnitAnyCase}` | `${number} ${UnitAnyCase}`
+export type StringValue = `${number} ${UnitAnyCase}` | `${number}${UnitAnyCase}` | `${number}`
 
 /**
  * Easily convert between storage size units.
@@ -66,18 +67,18 @@ export function byteSize(value: StringValue | number): number | string {
  * @param str
  * @returns bits
  */
-// eslint-disable-next-line complexity
+ 
 function toBits(str: StringValue): number {
   const match =
-    // eslint-disable-next-line max-len
-    /^(-?(?:\d+)?\.?\d+) *(bits?|bytes?|b|kilobytes?|kb|megabytes?|mb|gigabytes?|gb|terabytes?|tb|petabytes?|pb|exabyte?|eb)?$/i.exec(
+     
+    /^(-?(?:\d+(?:\.\d+)?|\.\d+)) *(bits?|bytes?|b|kilobytes?|kb|megabytes?|mb|gigabytes?|gb|terabytes?|tb|petabytes?|pb|exabyte?|eb)?$/i.exec(
       str
     )
   if (!match) {
-    return NaN
+    return Number.NaN
   }
-  const n = parseFloat(match[1]!)
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const n = Number.parseFloat(match[1]!)
+   
   const type = (match[2] || 'bits').toLowerCase() as Lowercase<Unit>
   switch (type) {
     case 'exabytes':

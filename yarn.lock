@@ -899,7 +899,7 @@ __metadata:
   resolution: "@pleisto/active-support@workspace:."
   dependencies:
     "@lukeed/uuid": "npm:^2.0.1"
-    "@pleisto/eslint-plugin": "npm:2.0.3"
+    "@pleisto/eslint-plugin": "npm:2.0.5"
     "@types/lodash": "npm:^4.17.6"
     "@types/node": "npm:20.14.9"
     "@vitest/coverage-v8": "npm:^1.6.0"
@@ -908,6 +908,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     moize: "npm:^6.1.6"
     ms: "npm:^3.0.0-canary.1"
+    mutative: "npm:^1.0.6"
     neverthrow: "npm:^6.2.2"
     performant-array-to-tree: "npm:^1.11.0"
     prettier: "npm:^3.3.2"
@@ -924,9 +925,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pleisto/eslint-plugin@npm:2.0.3":
-  version: 2.0.3
-  resolution: "@pleisto/eslint-plugin@npm:2.0.3"
+"@pleisto/eslint-plugin@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@pleisto/eslint-plugin@npm:2.0.5"
   dependencies:
     "@eslint-react/tools": "npm:^1.5.19"
     "@typescript-eslint/eslint-plugin": "npm:^8.0.0-alpha.36"
@@ -942,7 +943,7 @@ __metadata:
     eslint-plugin-promise: "npm:^6.2.0"
     eslint-plugin-react: "npm:^7.34.3"
     eslint-plugin-react-compiler: "npm:0.0.0-experimental-0998c1e-20240625"
-    eslint-plugin-react-hooks: "npm:^4.6.2"
+    eslint-plugin-react-hooks: "npm:^5.1.0-beta-26f2496093-20240514"
     eslint-plugin-regexp: "npm:^2.6.0"
     eslint-plugin-unicorn: "npm:^54.0.0"
     eslint-plugin-unused-imports: "npm:^4.0.0"
@@ -950,7 +951,7 @@ __metadata:
   peerDependencies:
     eslint: ">=9.6.0"
     typescript: ">=4.9.5"
-  checksum: 10c0/1f07073d59b27b9e25cdf8e1e1c572af08e9afe6982193381284b8e02f530e9d0fcbd6207a97e4c2c8527878da3519bacbab407551ed49b51b2f3cf18b4ab167
+  checksum: 10c0/5a3e30bf9791d0256815fbfd11787023fc71397dcefcb08aeb66cbfb00452e986969a56fb216c0ddf22c2fa0c8d5b90cf87be9ed19a57a4d82c60ebaec009acd
   languageName: node
   linkType: hard
 
@@ -2742,12 +2743,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.6.2":
-  version: 4.6.2
-  resolution: "eslint-plugin-react-hooks@npm:4.6.2"
+"eslint-plugin-react-hooks@npm:^5.1.0-beta-26f2496093-20240514":
+  version: 5.1.0-rc-fb9a90fa48-20240614
+  resolution: "eslint-plugin-react-hooks@npm:5.1.0-rc-fb9a90fa48-20240614"
   peerDependencies:
-    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
-  checksum: 10c0/4844e58c929bc05157fb70ba1e462e34f1f4abcbc8dd5bbe5b04513d33e2699effb8bca668297976ceea8e7ebee4e8fc29b9af9d131bcef52886feaa2308b2cc
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
+  checksum: 10c0/e27a8073a19d8411cb1cbbd2a935d0f5ec824efb7fd17d907df5c71df47ace9faa9c08c0e8f6db627b62db202a146ff111e6b3067e31773af0b41d15a34ba956
   languageName: node
   linkType: hard
 
@@ -4557,6 +4558,13 @@ __metadata:
   version: 3.0.0-canary.1
   resolution: "ms@npm:3.0.0-canary.1"
   checksum: 10c0/81040c55778c01b6cb8fd35aee71465b765a8ab5daa2f8d46a59f9fde0f86c668483232c82c9e8fb7d9379a3671b3bdd5f34b38e54dcedb608d791d149bb2815
+  languageName: node
+  linkType: hard
+
+"mutative@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "mutative@npm:1.0.6"
+  checksum: 10c0/9b3a0b0c7b3f132e4257bc16b6de2941b70368572a2d2ab44d1a7fdc88a0acfac093107e12a5793ecd116034668309c471ff801c44352bf157a20ddb34092d61
   languageName: node
   linkType: hard
 

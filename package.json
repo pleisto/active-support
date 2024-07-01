@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/active-support",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A TypeScript utility library designed to optimize for programmer happiness.",
   "license": "Apache-2.0",
   "files": [
@@ -47,6 +47,7 @@
     "lodash": "^4.17.21",
     "moize": "^6.1.6",
     "ms": "^3.0.0-canary.1",
+    "mutative": "^1.0.6",
     "neverthrow": "^6.2.2",
     "performant-array-to-tree": "^1.11.0",
     "radash": "^12.1.0",
@@ -54,7 +55,7 @@
     "type-fest": "^4.20.1"
   },
   "devDependencies": {
-    "@pleisto/eslint-plugin": "2.0.3",
+    "@pleisto/eslint-plugin": "2.0.5",
     "@types/lodash": "^4.17.6",
     "@types/node": "20.14.9",
     "@vitest/coverage-v8": "^1.6.0",

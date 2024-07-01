@@ -10,11 +10,12 @@ export * from './results'
 export * from './sleep'
 export * from './time'
 export * from './ts-types'
-
 export * from './uuid'
 
 // third utils
+export * from 'mutative'
 export * from 'ts-pattern' // rust style pattern matching
+
 /**
  * Converts an array of items with ids and parent ids to a nested tree in a performant way (time complexity `O(n)`).
  *

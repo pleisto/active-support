@@ -13,7 +13,6 @@ export * from './ts-types'
 export * from './uuid'
 
 // third utils
-export * from 'mutative'
 export * from 'ts-pattern' // rust style pattern matching
 
 /**

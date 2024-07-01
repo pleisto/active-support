@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/active-support",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A TypeScript utility library designed to optimize for programmer happiness.",
   "license": "Apache-2.0",
   "files": [
@@ -47,7 +47,6 @@
     "lodash": "^4.17.21",
     "moize": "^6.1.6",
     "ms": "^3.0.0-canary.1",
-    "mutative": "^1.0.6",
     "neverthrow": "^6.2.2",
     "performant-array-to-tree": "^1.11.0",
     "radash": "^12.1.0",

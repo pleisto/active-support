@@ -6,7 +6,7 @@ import { Err, Result } from 'neverthrow'
  */
 export const safeJsonParse = Result.fromThrowable(JSON.parse)
 
-export { Result, ResultAsync, ok } from 'neverthrow' // rust style error handing
+export { ok, Result, ResultAsync } from 'neverthrow' // rust style error handing
 
 // https://github.com/supermacro/neverthrow/blob/master/src/result.ts#L312
 class ExplicitErr<T, E extends Error> extends Err<T, E> {

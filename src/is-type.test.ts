@@ -8,8 +8,8 @@ import {
   isNullOrUndefined,
   isNumber,
   isString,
-  isUUID,
-  isUrl
+  isUrl,
+  isUUID
 } from './is-type'
 
 describe('.isString', () => {

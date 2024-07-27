@@ -1,4 +1,6 @@
-import { type Config, type Item, arrayToTree } from 'performant-array-to-tree'
+import type { Config, Item } from 'performant-array-to-tree'
+
+import { arrayToTree } from 'performant-array-to-tree'
 
 export * from './base58'
 export * from './byte-size'

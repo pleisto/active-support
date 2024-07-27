@@ -1,3 +1,7 @@
-import { pleistoESLintConfig } from "@pleisto/eslint-plugin";
+import { pleistoESLintConfig } from '@pleisto/eslint-plugin'
 
-export default pleistoESLintConfig({});
+export default pleistoESLintConfig({
+  rules: {
+    'sort-imports': 'off'
+  }
+})

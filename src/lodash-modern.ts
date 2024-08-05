@@ -6,7 +6,7 @@
  *
  * @see https://radash-docs.vercel.app/docs/getting-started
  */
-export * from 'es-toolkit/compat'
+export * from 'es-toolkit'
 export { default as equal } from 'fast-deep-equal/es6/react'
 export { default as memoize } from 'moize'
 

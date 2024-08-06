@@ -1,3 +1,14 @@
+import isPlainObject from 'lodash/isPlainObject'
+import omitBy from 'lodash/omitBy'
+import pickBy from 'lodash/pickBy'
+import sortBy from 'lodash/sortBy'
+import toNumber from 'lodash/toNumber'
+import toString from 'lodash/toString'
+import uniqBy from 'lodash/uniqBy'
+
+export { default as equal } from 'fast-deep-equal/es6/react'
+export { omitBy, pickBy, sortBy, toNumber, toString, uniqBy }
+export { default as memoize } from 'moize'
 /**
  * NOTICE: All methods not exported from `lodash` are deprecated.
  * you can replace with ES6
@@ -6,9 +17,83 @@
  *
  * @see https://radash-docs.vercel.app/docs/getting-started
  */
-export * from 'es-toolkit'
-export { default as equal } from 'fast-deep-equal/es6/react'
-export { default as memoize } from 'moize'
+export {
+  camel as camelCase,
+  capitalize,
+  chain,
+  cluster as chunk,
+  compose,
+  counting,
+  dash as kebabCase,
+  diff,
+  draw as sample,
+  first,
+  fork as partition,
+  get,
+  group,
+  intersects,
+  invert,
+  last,
+  listify,
+  mapEntries,
+  mapKeys,
+  mapValues,
+  max,
+  min,
+  partial,
+  partob,
+  pick,
+  select,
+  series,
+  snake as snakeCase,
+  sum,
+  throttle,
+  zip
+} from 'radash'
+
+/**
+ * ES Version of `lodash.compact`
+ * Creates an array with all falsey values removed.
+ * The values false, null, 0, "", undefined, and NaN are falsey.
+ * @param arr - The array to compact.
+ * @returns Returns the new array of filtered values.
+ */
+export const compact = <T>(arr: T[]): T[] => arr.filter(x => !!x)
+
+/**
+ * ES Version of `lodash.drop`
+ * Creates a slice of array with n elements dropped from the beginning.
+ * @param arr - The array to query.
+ * @param n - The number of elements to drop.
+ * @returns Returns the slice of array.
+ */
+export const drop = <T>(arr: T[], n = 1): T[] => arr.slice(n)
+
+/**
+ * ES Version of `lodash.dropRight`
+ * Creates a slice of array with n elements dropped from the end.
+ * @param arr - The array to query.
+ * @param n - The number of elements to drop.
+ * @returns The slice of array.
+ */
+export const dropRight = <T>(arr: T[], n = 1): T[] => arr.slice(0, -n || arr.length)
+
+/**
+ * ES Version of `lodash.initial`
+ * Gets all but the last element of array.
+ * @param arr - The array to query.
+ * @returns Returns the slice of array.
+ */
+export const initial = <T>(arr: T[]): T[] => arr.slice(0, -1)
+
+/**
+ * ES Version of `lodash.uniq`
+ * Creates a duplicate-free version of an array, in which only the first occurrence of each element is kept.
+ * The order of result values is determined by the order they occur in the array.
+ * @param arr - The array to inspect.
+ * @returns Returns the new duplicate free array.
+ */
+export const uniq = <T>(arr: T[]): T[] => [...new Set(arr)]
 
 /**
  * ES Version of `lodash.reject`
@@ -46,24 +131,6 @@ export const cloneDeep = (value: any): any | never => {
   }
   throw new Error(`You've tried to clone something that can't be cloned`)
 }
-
-/**
- * ES Version of `lodash.drop`
- * Creates a slice of array with n elements dropped from the beginning.
- * @param arr - The array to query.
- * @param n - The number of elements to drop.
- * @returns Returns the slice of array.
- */
-export const drop = <T>(arr: T[], n = 1): T[] => arr.slice(n)
-
-/**
- * ES Version of `lodash.dropRight`
- * Creates a slice of array with n elements dropped from the end.
- * @param arr - The array to query.
- * @param n - The number of elements to drop.
- * @returns The slice of array.
- */
-export const dropRight = <T>(arr: T[], n = 1): T[] => arr.slice(0, -n || arr.length)
 
 /**
  * The _merge helper iterates through all props on source and assigns them to target.
@@ -115,6 +182,82 @@ export function deepMerge<T = object>(target: Partial<T>, ...args: Array<Partial
 }
 
 /**
+ * A debounced function that will be delayed by a given `wait`
+ * time in milliseconds. If the method is called again before
+ * the timeout expires, the previous call will be aborted.
+ */
+interface DebouncedFunction<T extends unknown[]> {
+  (...args: T): void
+  /** Clears the debounce timeout and omits calling the debounced function. */
+  clear: () => void
+  /** Clears the debounce timeout and calls the debounced function immediately. */
+  flush: () => void
+  /** Returns a boolean wether a debounce call is pending or not. */
+  readonly pending: boolean
+}
+
+/**
+ * Creates a debounced function that delays the given `func`
+ * by a given `wait` time in milliseconds. If the method is called
+ * again before the timeout expires, the previous call will be
+ * aborted.
+ *
+ * @param fn    The function to debounce.
+ * @param wait  The time in milliseconds to delay the function.
+ *
+ * @example
+ * ``` *
+ * const log = debounce(
+ *   (event: Deno.FsEvent) =>
+ *     console.log("[%s] %s", event.kind, event.paths[0]),
+ *   200,
+ * );
+ *
+ * for await (const event of Deno.watchFs("./")) {
+ *   log(event);
+ * }
+ * ```
+ * Forked from third-party library
+ * @see https://github.com/denoland/deno_std/blob/main/async/debounce.ts
+ * @author The Deno authors
+ * @license MIT
+ */
+export function debounce<T extends any[]>(
+  fn: (this: DebouncedFunction<T>, ...args: T) => void,
+  wait: number
+): DebouncedFunction<T> {
+  let timeout: NodeJS.Timeout | null | number = null
+  let flush: (() => void) | null = null
+
+  const debounced: DebouncedFunction<T> = ((...args: T) => {
+    debounced.clear()
+    flush = () => {
+      debounced.clear()
+      fn.call(debounced, ...args)
+    }
+    timeout = setTimeout(flush, wait)
+  }) as DebouncedFunction<T>
+
+  debounced.clear = () => {
+    if (typeof timeout === 'number') {
+      clearTimeout(timeout)
+      timeout = null
+      flush = null
+    }
+  }
+
+  debounced.flush = () => {
+    flush?.()
+  }
+
+  Object.defineProperty(debounced, 'pending', {
+    get: () => typeof timeout === 'number'
+  })
+
+  return debounced
+}
+
+/**
  * Converts the characters “&”, “<”, “>”, ‘"’, and “’”
  * in string to their corresponding HTML entities.
  * @param str The string to escape.
@@ -128,4 +271,143 @@ export function escape(str: string): string {
     '>': '&gt;'
   }
   return str.replace(/[<>"&]/g, a => escapeChar[a] ?? a)
+}
+
+/**
+ * Tiny helper to do the minimal amount of work in duplicating an object but omitting some
+ * props. This ends up faster than using object ...rest or reduce to filter.
+ *
+ * This behaves very much like filteredAssign, but does not merge many objects together,
+ * uses an exclusion object map, and avoids spreads all for optimal performance.
+ *
+ * See perf test for background:
+ * https://jsperf.com/omit-vs-rest-vs-reduce/1
+ *
+ * @param obj - The object to clone
+ * @param exclusions - The array of keys to exclude
+ */
+export function omit<TObj extends Record<string, any>, Exclusions extends Array<keyof TObj>>(
+  obj: TObj,
+  exclusions: Exclusions
+): Omit<TObj, Exclusions[number]> {
+  const result: Record<string, any> = {}
+
+  for (const key in obj) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!exclusions.includes(key) && obj.hasOwnProperty(key)) {
+      result[key] = obj[key]
+    }
+  }
+
+  return result as TObj
+}
+
+/**
+ * Creates an array of numbers (positive and/or negative) progressing from start up to, but not including, end
+ * If end is not specified, it’s set to start with start then set to 0.
+ * @param start
+ * @param end
+ * @returns
+ */
+export function range(start: number, end?: number): number[] {
+  if (end === undefined) return [...Array(start).keys()]
+  // range
+  return Array.from(Array(Math.abs(end - start) + 1), (_, i) => start + i)
+}
+
+/**
+ * Receives a tree-like object and returns a plain object which depth is 1.
+ *
+ * - Input:
+ *
+ *  {
+ *    name: 'John',
+ *    address: {
+ *      street: 'Fake St. 123',
+ *      coordinates: {
+ *        longitude: 55.6779627,
+ *        latitude: 12.5964313
+ *      }
+ *    }
+ *  }
+ *
+ * - Output:
+ *
+ *  {
+ *    name: 'John',
+ *    address.street: 'Fake St. 123',
+ *    address.coordinates.latitude: 55.6779627,
+ *    address.coordinates.longitude: 12.5964313
+ *  }
+ *
+ * @param value an Object
+ * @returns a flattened object
+ * @private
+ */
+export function flattenObject<T extends object>(value: T): T extends object ? Flatten<T> : T {
+  if (!isPlainObject(value)) {
+    // TypeScript doesn't know T is an object due to isPlainObject's typings. Cast to any.
+    return value as any
+  }
+
+  const flattenedObj: Record<string, any> = Object.create(null)
+
+  function _flattenObject(obj: Record<string, any>, subPath?: string): Record<string, any> {
+    for (const key of Object.keys(obj)) {
+      const pathToProperty = subPath ? `${subPath}.${key}` : key
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        _flattenObject(obj[key], pathToProperty)
+      } else {
+        flattenedObj[pathToProperty] = obj[key]
+      }
+    }
+
+    return flattenedObj
+  }
+
+  return _flattenObject(value) as any
+}
+
+// taken from
+// https://stackoverflow.com/questions/66614528/flatten-object-with-custom-keys-in-typescript
+// because this is typescript black magic
+type Flatten<T extends object> = object extends T
+  ? object
+  : {
+        [K in keyof T]-?: (
+          x: NonNullable<T[K]> extends infer V
+            ? V extends object
+              ? V extends readonly any[]
+                ? Pick<T, K>
+                : Flatten<V> extends infer FV
+                  ? {
+                      [P in keyof FV as `${Extract<K, number | string>}.${Extract<P, number | string>}`]: FV[P]
+                    }
+                  : never
+              : Pick<T, K>
+            : never
+        ) => void
+      } extends Record<keyof T, (y: infer O) => void>
+    ? O extends unknown
+      ? { [K in keyof O]: O[K] }
+      : never
+    : never
+
+/**
+ * Gets n random elements at unique keys from collection up to the size of collection.
+ * @param collection The array from which elements will be sampled.
+ * @param n The number of elements to sample. default is 1.
+ * @returns An array containing n random elements from the provided collection.
+ */
+export function sampleSize<T>(collection: readonly T[], n = 1): T[] {
+  // Ensure that n does not exceed the number of elements in the collection
+  const count = Math.min(n, collection.length)
+
+  const result = collection.slice()
+  for (let i = 0; i < count; i++) {
+    const rand = i + Math.floor(Math.random() * (collection.length - i))
+    ;[result[i], result[rand]] = [result[rand] as T, result[i] as T]
+  }
+
+  return result.slice(0, count)
 }

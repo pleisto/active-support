@@ -1,7 +1,14 @@
+import isBoolean from 'lodash/isBoolean'
+import isDate from 'lodash/isDate'
+import isNaN from 'lodash/isNaN'
+import isNull from 'lodash/isNull'
+import isObject from 'lodash/isObject'
+import isPlainObject from 'lodash/isPlainObject'
+import isRegExp from 'lodash/isRegExp'
 import { isArray, isEmpty, isFunction } from 'radash'
 
 export { isFloat, isInt, isSymbol } from 'radash'
-export { isArray, isEmpty, isFunction }
+export { isArray, isBoolean, isDate, isEmpty, isFunction, isNaN, isNull, isObject, isPlainObject, isRegExp }
 
 /**
  * Checks if a given value is a string.

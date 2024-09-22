@@ -33,6 +33,7 @@ export {
   group,
   intersects,
   invert,
+  isEqual,
   last,
   listify,
   mapEntries,

@@ -13,6 +13,7 @@ export * from './sleep'
 export * from './time'
 export * from './ts-types'
 export * from './uuid'
+export * from './version'
 
 // third utils
 export * from 'ts-pattern' // rust style pattern matching

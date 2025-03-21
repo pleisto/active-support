@@ -49,7 +49,22 @@ export {
   snake as snakeCase,
   sum,
   throttle,
-  zip
+  zip,
+  callable,
+  alphabetical,
+  assign,
+  boil,
+  construct,
+  crush,
+  defer,
+  guard,
+  inRange,
+  iterate,
+  keys as deepKeys,
+  parallel,
+  proxied,
+  shake,
+  sift
 } from 'radash'
 
 /**

@@ -1,6 +1,6 @@
 import { isPlainObject, isArrayLike, isSymbol } from './is-type'
 
-export { default as equal } from 'fast-deep-equal/es6/react'
+export { default as equal } from 'fast-deep-equal/es6/react.js'
 export { default as memoize } from 'moize'
 /**
  * NOTICE: All methods not exported from `lodash` are deprecated.

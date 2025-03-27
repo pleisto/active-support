@@ -1,13 +1,6 @@
-import isPlainObject from 'lodash/isPlainObject'
-import omitBy from 'lodash/omitBy'
-import pickBy from 'lodash/pickBy'
-import sortBy from 'lodash/sortBy'
-import toNumber from 'lodash/toNumber'
-import toString from 'lodash/toString'
-import uniqBy from 'lodash/uniqBy'
+import { isPlainObject, isArrayLike, isSymbol } from './is-type'
 
 export { default as equal } from 'fast-deep-equal/es6/react'
-export { omitBy, pickBy, sortBy, toNumber, toString, uniqBy }
 export { default as memoize } from 'moize'
 /**
  * NOTICE: All methods not exported from `lodash` are deprecated.
@@ -426,4 +419,148 @@ export function sampleSize<T>(collection: readonly T[], n = 1): T[] {
   }
 
   return result.slice(0, count)
+}
+
+/**
+ * Converts `value` to a string.
+ *
+ * An empty string is returned for `null` and `undefined` values.
+ * The sign of `-0` is preserved.
+ *
+ * @param {unknown} value - The value to convert.
+ * @returns {string} Returns the converted string.
+ *
+ * @example
+ * toString(null) // returns ''
+ * toString(undefined) // returns ''
+ * toString(-0) // returns '-0'
+ * toString([1, 2, -0]) // returns '1,2,-0'
+ * toString([Symbol('a'), Symbol('b')]) // returns 'Symbol(a),Symbol(b)'
+ */
+export function toString(value?: unknown): string {
+  if (value == null) {
+    return ''
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(toString).join(',')
+  }
+
+  const result = String(value)
+
+  if (result === '0' && Object.is(Number(value), -0)) {
+    return '-0'
+  }
+
+  return result
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * Unlike `Number()`, this function returns `NaN` for symbols.
+ *
+ * @param {unknown} value - The value to convert.
+ * @returns {number} Returns the number.
+ *
+ * @example
+ * toNumber(3.2); // => 3.2
+ * toNumber(Number.MIN_VALUE); // => 5e-324
+ * toNumber(Infinity); // => Infinity
+ * toNumber('3.2'); // => 3.2
+ * toNumber(Symbol.iterator); // => NaN
+ * toNumber(NaN); // => NaN
+ */
+export function toNumber(value?: unknown): number {
+  if (isSymbol(value)) {
+    return Number.NaN
+  }
+
+  return Number(value)
+}
+
+/**
+ * Creates a new object composed of the properties that do not satisfy the predicate function.
+ *
+ * This function takes an object and a predicate function, and returns a new object that
+ * includes only the properties for which the predicate function returns false.
+ *
+ * @template T - The type of object.
+ * @param {T} obj - The object to omit properties from.
+ * @param {(value: T[string], key: keyof T) => boolean} shouldOmit - A predicate function that determines
+ * whether a property should be omitted. It takes the property's key and value as arguments and returns `true`
+ * if the property should be omitted, and `false` otherwise.
+ * @returns {Partial<T>} A new object with the properties that do not satisfy the predicate function.
+ *
+ * @example
+ * const obj = { a: 1, b: 'omit', c: 3 };
+ * const shouldOmit = (value) => typeof value === 'string';
+ * const result = omitBy(obj, shouldOmit);
+ * // result will be { a: 1, c: 3 }
+ */
+export function omitBy<T extends Record<string, any>>(
+  obj: T,
+  shouldOmit: (value: T[keyof T], key: keyof T) => boolean
+): Partial<T> {
+  const result: Partial<T> = {}
+
+  const keys = Object.keys(obj) as Array<keyof T>
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    const value = obj[key!]
+
+    if (!shouldOmit(value, key!)) {
+      result[key!] = value
+    }
+  }
+
+  return result
+}
+
+/**
+ * Creates a new object composed of the properties that satisfy the predicate function.
+ *
+ * This function takes an object and a predicate function, and returns a new object that
+ * includes only the properties for which the predicate function returns true.
+ *
+ * @template T - The type of object.
+ * @param {T} obj - The object to pick properties from.
+ * @param {(value: T[keyof T], key: keyof T) => boolean} shouldPick - A predicate function that determines
+ * whether a property should be picked. It takes the property's key and value as arguments and returns `true`
+ * if the property should be picked, and `false` otherwise.
+ * @returns {Partial<T>} A new object with the properties that satisfy the predicate function.
+ *
+ * @example
+ * const obj = { a: 1, b: 'pick', c: 3 };
+ * const shouldPick = (value) => typeof value === 'string';
+ * const result = pickBy(obj, shouldPick);
+ * // result will be { b: 'pick' }
+ */
+export function pickBy<T extends Record<string, any>>(
+  obj: T,
+  shouldPick?: (value: T[keyof T], key: keyof T, obj: T) => boolean
+): Partial<T> {
+  if (obj == null) {
+    return {}
+  }
+
+  const result: Partial<T> = {}
+
+  if (shouldPick == null) {
+    return obj
+  }
+
+  const keys = isArrayLike(obj) ? range(obj.length) : (Object.keys(obj) as Array<keyof T>)
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]!.toString() as keyof T
+    const value = obj[key]
+
+    if (shouldPick(value, key, obj)) {
+      result[key] = value
+    }
+  }
+
+  return result
 }

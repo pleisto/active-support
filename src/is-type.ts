@@ -1,12 +1,96 @@
-import isBoolean from 'lodash/isBoolean'
-import isNaN from 'lodash/isNaN'
-import isNull from 'lodash/isNull'
-import isPlainObject from 'lodash/isPlainObject'
-import isRegExp from 'lodash/isRegExp'
 import { isArray, isEmpty, isFunction } from 'radash'
 
 export { isFloat, isInt, isSymbol, isDate, isObject, isPrimitive, isPromise } from 'radash'
-export { isArray, isBoolean, isEmpty, isFunction, isNaN, isNull, isPlainObject, isRegExp }
+export { isArray, isEmpty, isFunction }
+
+/**
+ * Checks if `value` is a RegExp.
+ *
+ * @param {unknown} value The value to check.
+ * @returns {value is RegExp} Returns `true` if `value` is a RegExp, `false` otherwise.
+ *
+ * @example
+ * const value1 = /abc/;
+ * const value2 = '/abc/';
+ *
+ * console.log(isRegExp(value1)); // true
+ * console.log(isRegExp(value2)); // false
+ */
+export function isRegExp(value: unknown): value is RegExp {
+  return value instanceof RegExp
+}
+
+/**
+ * Checks if a given value is a plain object.
+ *
+ * @param {object} value - The value to check.
+ * @returns {value is Record<PropertyKey, any>} - True if the value is a plain object, otherwise false.
+ *
+ * @example
+ * ```typescript
+ * // ✅👇 True
+ *
+ * isPlainObject({ });                       // ✅
+ * isPlainObject({ key: 'value' });          // ✅
+ * isPlainObject({ key: new Date() });       // ✅
+ * isPlainObject(new Object());              // ✅
+ * isPlainObject(Object.create(null));       // ✅
+ * isPlainObject({ nested: { key: true} });  // ✅
+ * isPlainObject(new Proxy({}, {}));         // ✅
+ * isPlainObject({ [Symbol('tag')]: 'A' });  // ✅
+ *
+ * // ✅👇 (cross-realms, node context, workers, ...)
+ * const runInNewContext = await import('node:vm').then(
+ *     (mod) => mod.runInNewContext
+ * );
+ * isPlainObject(runInNewContext('({})'));   // ✅
+ *
+ * // ❌👇 False
+ *
+ * class Test { };
+ * isPlainObject(new Test())           // ❌
+ * isPlainObject(10);                  // ❌
+ * isPlainObject(null);                // ❌
+ * isPlainObject('hello');             // ❌
+ * isPlainObject([]);                  // ❌
+ * isPlainObject(new Date());          // ❌
+ * isPlainObject(new Uint8Array([1])); // ❌
+ * isPlainObject(Buffer.from('ABC'));  // ❌
+ * isPlainObject(Promise.resolve({})); // ❌
+ * isPlainObject(Object.create({}));   // ❌
+ * isPlainObject(new (class Cls {}));  // ❌
+ * isPlainObject(globalThis);          // ❌,
+ * ```
+ */
+export function isPlainObject(value: unknown): value is Record<PropertyKey, any> {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+
+  const proto = Object.getPrototypeOf(value) as typeof Object.prototype | null
+
+  const hasObjectPrototype =
+    proto === null ||
+    proto === Object.prototype ||
+    // Required to support node:vm.runInNewContext({})
+    Object.getPrototypeOf(proto) === null
+
+  if (!hasObjectPrototype) return false
+
+  return Object.prototype.toString.call(value) === '[object Object]'
+}
+
+export function isBoolean(value?: unknown): value is boolean {
+  return typeof value === 'boolean' || value instanceof Boolean
+}
+
+export function isNaN(value?: unknown): value is typeof Number.NaN {
+  return Number.isNaN(value)
+}
+
+export function isNull(x: unknown): x is null {
+  return x === null
+}
 
 /**
  * Checks if a given value is a string.
@@ -97,4 +181,47 @@ export const isEmail = (value: string): boolean => /^[\w-\\.]+@(?:[\w-]+\.)+[\w-
 export const isFile = (obj: any): obj is File => {
   // return Object.prototype.toString.call(obj) === '[object File]'
   return obj instanceof File
+}
+
+/**
+ * Checks if a given value is a valid length.
+ *
+ * A valid length is of type `number`, is a non-negative integer, and is less than or equal to
+ * JavaScript's maximum safe integer (`Number.MAX_SAFE_INTEGER`).
+ * It returns `true` if the value is a valid length, and `false` otherwise.
+ *
+ * This function can also serve as a type predicate in TypeScript, narrowing the type of the
+ * argument to a valid length (`number`).
+ *
+ * @param {unknown} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ *
+ * @example
+ * isLength(0); // true
+ * isLength(42); // true
+ * isLength(-1); // false
+ * isLength(1.5); // false
+ * isLength(Number.MAX_SAFE_INTEGER); // true
+ * isLength(Number.MAX_SAFE_INTEGER + 1); // false
+ */
+export function isLength(value: unknown): value is number {
+  return Number.isSafeInteger(value) && (value as number) >= 0
+}
+
+/**
+ * Checks if `value` is array-like.
+ *
+ * @param {unknown} value The value to check.
+ * @returns {value is ArrayLike<unknown>} Returns `true` if `value` is array-like, else `false`.
+ *
+ * @example
+ * isArrayLike([1, 2, 3]); // true
+ * isArrayLike('abc'); // true
+ * isArrayLike({ 0: 'a', length: 1 }); // true
+ * isArrayLike({}); // false
+ * isArrayLike(null); // false
+ * isArrayLike(undefined); // false
+ */
+export function isArrayLike(value?: unknown): value is ArrayLike<unknown> {
+  return value != null && typeof value !== 'function' && isLength((value as ArrayLike<unknown>).length)
 }

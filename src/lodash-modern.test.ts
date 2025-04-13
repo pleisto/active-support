@@ -11,7 +11,13 @@ import {
   initial,
   pickBy,
   reject,
-  uniq
+  uniq,
+  range,
+  sampleSize,
+  toString,
+  toNumber,
+  omitBy,
+  omit
 } from './lodash-modern'
 
 describe('.compact', () => {
@@ -274,5 +280,120 @@ describe('pickBy', () => {
     })
 
     expect(count).toBe(1)
+  })
+})
+
+describe('range', () => {
+  it('should work with only start parameter', () => {
+    expect(range(5)).toEqual([0, 1, 2, 3, 4])
+  })
+
+  it('should work with start and end parameters', () => {
+    expect(range(1, 5)).toEqual([1, 2, 3, 4, 5])
+    expect(range(5, 1)).toEqual([5, 4, 3, 2, 1])
+    expect(range(-2, 2)).toEqual([-2, -1, 0, 1, 2])
+  })
+})
+
+describe('sampleSize', () => {
+  it('should return empty array when collection is empty', () => {
+    expect(sampleSize([], 2)).toEqual([])
+  })
+
+  it('should return all elements when n is greater than collection length', () => {
+    const collection = [1, 2, 3]
+    const result = sampleSize(collection, 5)
+    expect(result.length).toBe(3)
+    expect(result.sort()).toEqual([1, 2, 3])
+  })
+
+  it('should return n random elements', () => {
+    const collection = [1, 2, 3, 4, 5]
+    const result = sampleSize(collection, 3)
+    expect(result.length).toBe(3)
+    expect(result.every(item => collection.includes(item))).toBe(true)
+  })
+})
+
+describe('toString', () => {
+  it('should return empty string for null and undefined', () => {
+    expect(toString(null)).toBe('')
+    expect(toString(undefined)).toBe('')
+  })
+
+  it('should preserve sign of -0', () => {
+    expect(toString(-0)).toBe('-0')
+  })
+
+  it('should convert arrays to comma-separated strings', () => {
+    expect(toString([1, 2, -0])).toBe('1,2,-0')
+  })
+
+  it('should convert symbols to string', () => {
+    expect(toString(Symbol('a'))).toBe('Symbol(a)')
+  })
+})
+
+describe('toNumber', () => {
+  it('should return NaN for symbols', () => {
+    expect(toNumber(Symbol.iterator)).toBeNaN()
+  })
+
+  it('should convert string numbers to numbers', () => {
+    expect(toNumber('3.2')).toBe(3.2)
+  })
+
+  it('should handle special number values', () => {
+    expect(toNumber(Number.MIN_VALUE)).toBe(5e-324)
+    expect(toNumber(Infinity)).toBe(Infinity)
+    expect(toNumber(Number.NaN)).toBeNaN()
+  })
+})
+
+describe('omitBy', () => {
+  it('should omit properties based on the predicate function', () => {
+    const obj = { a: 1, b: 'omit', c: 3 }
+    const shouldOmit = (value: string | number) => typeof value === 'string'
+    const result = omitBy(obj, shouldOmit)
+    expect(result).toEqual({ a: 1, c: 3 })
+  })
+
+  it('should return an empty object if all properties should be omitted', () => {
+    const obj = { a: 'omit', b: 'omit', c: 'omit' }
+    const shouldOmit = (value: string) => typeof value === 'string'
+    const result = omitBy(obj, shouldOmit)
+    expect(result).toEqual({})
+  })
+
+  it('should return the same object if no properties should be omitted', () => {
+    const obj = { a: 1, b: 2, c: 3 }
+    const shouldOmit = (value: number) => typeof value === 'string'
+    const result = omitBy(obj, shouldOmit)
+    expect(result).toEqual(obj)
+  })
+
+  it('should work with an empty object', () => {
+    const obj = {}
+    const shouldOmit = (value: never) => value
+    const result = omitBy(obj, shouldOmit)
+    expect(result).toEqual({})
+  })
+})
+
+describe('omit', () => {
+  it('should work', () => {
+    expect(omit({ a: 1, b: 2, c: 3 }, ['b'])).toEqual({ a: 1, c: 3 })
+  })
+
+  it('should work with nested objects', () => {
+    expect(omit({ a: 1, b: { nested: 'omit' }, c: 3 }, ['b'])).toEqual({ a: 1, c: 3 })
+  })
+
+  it('should work with an empty object', () => {
+    expect(omit({}, ['a'] as any)).toEqual({})
+  })
+
+  it('should work with an empty array', () => {
+    expect(omit({ a: 1, b: 2, c: 3 }, [])).toEqual({ a: 1, b: 2, c: 3 })
   })
 })

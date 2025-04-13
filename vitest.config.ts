@@ -1,5 +1,10 @@
-import { defineConfig } from "vitest/config";
-// eslint-disable-next-line import/no-default-export
+import { defineConfig } from 'vitest/config'
+
 export default defineConfig({
   plugins: [],
-});
+  test: {
+    coverage: {
+      include: ['src']
+    }
+  }
+})

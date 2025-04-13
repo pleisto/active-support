@@ -57,7 +57,8 @@ export {
   parallel,
   proxied,
   shake,
-  sift
+  sift,
+  zipToObject
 } from 'radash'
 
 /**
@@ -267,7 +268,7 @@ export function debounce<T extends any[]>(
 }
 
 /**
- * Converts the characters “&”, “<”, “>”, ‘"’, and “’”
+ * Converts the characters "&", "<", ">", '"', and "'"
  * in string to their corresponding HTML entities.
  * @param str The string to escape.
  * @return Returns the escaped string.
@@ -313,15 +314,20 @@ export function omit<TObj extends Record<string, any>, Exclusions extends Array<
 
 /**
  * Creates an array of numbers (positive and/or negative) progressing from start up to, but not including, end
- * If end is not specified, it’s set to start with start then set to 0.
+ * If end is not specified, it's set to start with start then set to 0.
  * @param start
  * @param end
  * @returns
  */
 export function range(start: number, end?: number): number[] {
-  if (end === undefined) return [...Array(start).keys()]
-  // range
-  return Array.from(Array(Math.abs(end - start) + 1), (_, i) => start + i)
+  if (end === undefined) {
+    return [...Array(start).keys()]
+  }
+
+  const length = Math.abs(end - start) + 1
+  const step = start < end ? 1 : -1
+
+  return Array.from({ length }, (_, i) => start + i * step)
 }
 
 /**

@@ -23,5 +23,6 @@ describe('meetsMinimumVersion', () => {
     expect(() => meetsMinimumVersion('1.2.3', '1.2')).toThrow('Invalid current version format')
     expect(() => meetsMinimumVersion('a.b.c', '1.2.3')).toThrow('Invalid minimum version format')
     expect(() => meetsMinimumVersion('1.2.3', '1.x.3')).toThrow('Invalid current version format')
+    expect(() => meetsMinimumVersion('1.2.3', '1')).toThrow('Invalid current version format')
   })
 })

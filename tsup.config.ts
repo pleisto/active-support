@@ -6,6 +6,5 @@ export default defineConfig({
   shims: false,
   minify: false,
   treeshake: false,
-  skipNodeModulesBundle: true,
-  bundle: false
+  skipNodeModulesBundle: true
 })

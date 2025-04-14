@@ -1,6 +1,6 @@
 {
   "name": "@pleisto/active-support",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "A TypeScript utility library designed to optimize for programmer happiness.",
   "license": "Apache-2.0",
   "files": [

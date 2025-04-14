@@ -1,15 +1,10 @@
- 
-import type { Integer, Positive } from './ts-types'
-
 export const AbortException = 'Aborted'
 /**
  * Sleeps for the specified amount of time.
  * @param milliseconds
  * @returns
  */
-export const sleep = <T extends number>(
-  milliseconds: Positive<Integer<T>>
-): { cancel: () => void; promise: Promise<void> } => {
+export const sleep = (milliseconds: number): { cancel: () => void; promise: Promise<void> } => {
   let timeout: ReturnType<typeof setTimeout>
   const controller = new AbortController()
   return {
@@ -34,9 +29,9 @@ export const sleep = <T extends number>(
  * - interval (optional): The interval, in milliseconds, at which to execute the callback. Defaults to undefined.
  * - callback (optional): The callback function to execute at each interval. Defaults to undefined.
  */
-export const sleepWithIntervals = <T extends number>(
-  ms: Positive<Integer<T>>,
-  interval?: Positive<Integer<T>>,
+export const sleepWithIntervals = (
+  ms: number,
+  interval?: number,
   callback?: () => void
 ): { cancel: () => void; promise: Promise<void> } => {
   let timeout: ReturnType<typeof setTimeout>

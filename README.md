@@ -124,12 +124,6 @@ See [ts-pattern](https://github.com/gvergnaud/ts-pattern) for more information.
 
 ### Utilities
 
-#### array2Tree
-
-Converts an array of items with ids and parent ids to a nested tree in a performant way (time complexity `O(n)`).
-
-Se [Performant array to tree](https://github.com/philipstanislaus/performant-array-to-tree) for more information.
-
 #### equals
 
 The fastest deep equal with ES6 Map, Set and Typed arrays support.

@@ -14,7 +14,7 @@ export const uuidShort = (): string => {
   buffer[6] = (buffer[6]! & 0x0F) | 0x40
   buffer[8] = (buffer[8]! & 0x3F) | 0x80
 
-  return base58Encode(buffer)
+  return base58Encode(buffer as any as ArrayBuffer)
 }
 
 export { v4 as uuidV4 } from '@lukeed/uuid'

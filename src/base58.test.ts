@@ -13,7 +13,7 @@ const testSetString = [
 describe('base58', () => {
   it('should encode', () => {
     for (const [input, output] of testSetString) {
-      expect(base58Encode(input!)).toBe(output)
+      expect(base58Encode(input! as string | ArrayBuffer)).toBe(output)
     }
   })
   it('should decode', () => {

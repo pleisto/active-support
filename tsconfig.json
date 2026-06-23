@@ -12,6 +12,7 @@
     "importHelpers": true,
     "sourceMap": true,
     "strict": true,
+    "types": ["node"],
     "noUncheckedIndexedAccess": true,
     "noPropertyAccessFromIndexSignature": false,
     "noFallthroughCasesInSwitch": true,
@@ -22,7 +23,8 @@
     "experimentalDecorators": true,
     "noEmitOnError": true,
     "useDefineForClassFields": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "6.0"
   },
   "ts-node": {
     "swc": true,

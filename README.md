@@ -2,6 +2,12 @@
 
 A TypeScript utility library designed to optimize for programmer happiness.
 
+## Runtime support
+
+- ESM first: `import { ... } from '@pleisto/active-support'`
+- CommonJS: supported via `require('@pleisto/active-support')`
+- Bun: supported through `bun` export condition and Bun runtime scripts
+
 > NOTES: If you want to add a new methods, make sure it will be used on both the client and the server side.
 > Any methods that will only used in a browser or NodeJS environment should not be added here.
 
@@ -49,6 +55,24 @@ byteSize(32_000_000) // '4 MB'
 >
 > We use base 10 instead of base 2 for bit.
 > See [IEC 60027-2 A.2 and ISO/IEC 80000](https://en.wikipedia.org/wiki/Binary_prefix#IEC_prefixes) for more information.
+
+## Install
+
+```bash
+bun install
+
+# build esm/cjs artifacts + type declarations
+bun run build
+
+# publish to npm
+bun run publish:package
+```
+
+## Publish
+
+```bash
+bun run publish:package
+```
 
 ### Type Checking Utilities
 

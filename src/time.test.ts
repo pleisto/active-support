@@ -28,7 +28,6 @@ describe('seconds', () => {
   })
 
   it('should throw error for invalid input', () => {
-    // @ts-expect-error - testing error case
     expect(() => seconds('')).toThrow('value must be a non-empty string or a number')
   })
 })

@@ -5,4 +5,4 @@ import { Result } from 'neverthrow'
  */
 export const safeJsonParse = Result.fromThrowable(JSON.parse)
 
-export * from 'neverthrow' // rust style error handing
+export * from 'neverthrow' // rust style error handling
